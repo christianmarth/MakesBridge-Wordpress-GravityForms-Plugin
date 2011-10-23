@@ -577,17 +577,32 @@ function makesbridgeRequest() {
  * MakesBridge Gravity Forms Integration
  */
 function mks_gf_options() {
+    
+    ?>
+<style>
+    h2{
+        color: #333;
+    }
+</style>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery('#mks_gform').change(function(){
+            alert(jQuery(this).val())
+        })
+    })
+</script>
+<?
     echo '<h2>MakesBridge GravityForms</h2>';
 
-    //Get a list of Gravity Forms
-
+    //Get a list of Gravity Forms Forms
     $forms = RGFormsModel::get_forms();
     echo '<pre>';
 //    print_r($forms);
     echo '</pre>';
 
     //Create A Select Option for our Forms
-    echo '<select>';
+    echo 'Gravity Form';
+    echo '<select id="mks_gform">';
     foreach ($forms as $form) {
         echo '<option value=' . $form->id . '>';
         echo $form->title;
@@ -606,9 +621,21 @@ function mks_gf_options() {
     $api = new mksapi($options['MKS_UserId'], $options['MKS_API_Token']);
     $api->login();
     $fields = $api->retrieveCustomFields();
+    $lists = $api->retrieveLists();
+    
 
-
+    //Retrieve MKS Lists
+    echo 'MakesBridge List';
+    echo '<select>';
+    foreach ($lists as $list){
+        echo '<option>';
+            echo $list->name;
+        echo '</option>';
+    }
+    echo '</select>';
+    
     echo '<pre>';
+//    print_r($lists);
 //    print_r($gform['fields']);
     echo '</pre>';
 
