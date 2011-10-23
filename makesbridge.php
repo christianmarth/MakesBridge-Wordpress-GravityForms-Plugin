@@ -2,7 +2,7 @@
 /*
   Plugin Name: MakesBridge
   Description: MakesBridge plugin for WordPress
-  Author: Christian Marth
+  Author: cloudgroup
   Version: 1.03
   Licence: GPL2
  */
