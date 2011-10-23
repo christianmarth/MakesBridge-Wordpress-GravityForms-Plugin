@@ -3,7 +3,7 @@
   Plugin Name: MakesBridge
   Description: MakesBridge plugin for WordPress
   Author: Christian Marth
-  Version: 1.01.1
+  Version: 1.02
   Licence: GPL2
  */
 
