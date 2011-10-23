@@ -8,7 +8,6 @@
  */
 
 
-
 /*
  * MakesBridge Gravity Forms Integration
  */
