@@ -12,7 +12,7 @@
 /*
  * MakesBridge Gravity Forms Integration
  */
-//echo 'hello world';
+echo 'hello world';
 add_action('init', array('GFMakesBridge', 'init'));
 
 class GFMakesBridge {
