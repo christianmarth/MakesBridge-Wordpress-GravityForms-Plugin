@@ -166,5 +166,24 @@ class mksapi {
 //End MakesBridge API
 =======
     }
+<<<<<<< HEAD
 }
 >>>>>>> first commit
+=======
+    
+    function retrieveCustomFields(){
+        $headers = array(
+            'Content-type' => 'text/xml',
+            'userId' => $this->userId,
+            'auth_tk' => $this->authToken
+        );
+        $response = wp_remote_get($this->url . 'getcustinfo/', array(
+            'headers' => $headers,
+            'sslverify' => false
+                ));
+        $data = wp_remote_retrieve_body($response);
+        $data = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
+        return($data);
+    }
+}
+>>>>>>> commit
