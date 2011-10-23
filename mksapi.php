@@ -3,11 +3,8 @@
 class mksapi {
 
     var $url = 'https://api.bridgemailsystem.com/pms/services/'; //MakesBridge API URL
-    
     var $apiKey; //MakesBridge API Access Token
-    
     var $userId; //MakesBridge API Username
-    
     var $authToken; //Authentication Token
 
     function mksapi($userId, $apiKey) {
@@ -54,7 +51,7 @@ class mksapi {
             'userId' => $this->userId,
             'auth_tk' => $this->authToken
         );
-        $response = wp_remote_get($this->url . 'getlistinfo/', array(
+        $response = wp_remote_post($this->url . 'getlistinfo/', array(
             'headers' => $headers,
             'sslverify' => false
                 ));
@@ -111,7 +108,7 @@ class mksapi {
             'userId' => $this->userId,
             'auth_tk' => $this->authToken
         );
-        $response = wp_remote_get($this->url . 'getcustinfo/', array(
+        $response = wp_remote_post($this->url . 'getcustinfo/', array(
             'headers' => $headers,
             'sslverify' => false
                 ));
@@ -119,21 +116,114 @@ class mksapi {
         $data = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
         return($data);
     }
-    
-    function retrieveWorkflowList(){
+
+    function retrieveWorkflowList() {
         $headers = array(
             'Content-type' => 'text/xml',
             'userId' => $this->userId,
             'auth_tk' => $this->authToken
         );
-        $response = wp_remote_get($this->url . 'getworkflowlist/', array(
+        $response = wp_remote_post($this->url . 'getworkflowlist/', array(
             'headers' => $headers,
             'sslverify' => false
                 ));
         $data = wp_remote_retrieve_body($response);
         $data = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
-        return($data);        
+        return($data);
+    }
+
+    function addToWorkflow($workflowId, $subscriberId, $stepId) {
+
+        $xml = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                <addtoworkflow>
+                  <workflowId>" . $workflowId . "</workflowId>    
+                  <subscriberId>" . $subscriberId . "</subscriberId>
+                  <stepOrder>" . $stepId . "</stepOrder>
+                </addtoworkflow>";
+
+
+        $headers = array(
+            'Content-type' => 'text/xml',
+            'userId' => $this->userId,
+            'auth_tk' => $this->authToken
+        );
+        $response = wp_remote_post($this->url . 'addtoworkflow/', array(
+            'headers' => $headers,
+            'sslverify' => false,
+            'body' => $xml
+                ));
+
+        $data = wp_remote_retrieve_body($response);
+        $data = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
+        return($data);
+    }
+
+    function getCampaignInfo($page) {
+        $xml = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                <getcampaign>
+                   <page>" . $page . "</page>
+                </getcampaign>";
+
+        $headers = array(
+            'Content-type' => 'text/xml',
+            'userId' => $this->userId,
+            'auth_tk' => $this->authToken
+        );
+        
+        $response = wp_remote_post($this->url . 'getcampaigninfo/', array(
+            'headers' => $headers,
+            'sslverify' => false,
+            'body' => $xml
+                ));
+        $data = wp_remote_retrieve_body($response);
+        $data = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
+        return($data);
+    }
+
+    function getCampaignDetail($campaignId) {
+        $xml = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                <campaign>
+                    <id>" . $campaignId . "</id>
+                </campaign>";
+
+        $headers = array(
+            'Content-type' => 'text/xml',
+            'userId' => $this->userId,
+            'auth_tk' => $this->authToken
+        );
+        $response = wp_remote_post($this->url . 'getcampaigndetail/', array(
+            'headers' => $headers,
+            'sslverify' => false,
+            'body' => $xml
+                ));
+
+        $data = wp_remote_retrieve_body($response);
+        $data = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
+        return($data);
+    }
+
+    function getCampaignStatistics($campaignId) {
+        $xml = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                <campaign>
+                    <id>" . $campaignId . "</id>
+                </campaign>";
+
+        $headers = array(
+            'Content-type' => 'text/xml',
+            'userId' => $this->userId,
+            'auth_tk' => $this->authToken
+        );
+        $response = wp_remote_post($this->url . 'getcampaignstat/', array(
+            'headers' => $headers,
+            'sslverify' => false,
+            'body' => $xml
+                ));
+
+        $data = wp_remote_retrieve_body($response);
+        $data = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
+        return($data);
     }
 
 }
+
 //End MakesBridge API
