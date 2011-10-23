@@ -2,12 +2,19 @@
 /*
   Plugin Name: MakesBridge
   Description: MakesBridge plugin for WordPress
+<<<<<<< HEAD
   Author: cloudgroup
   Version: 1.03
+=======
+  Author: Christian Marth
+  Version: 1.02
+>>>>>>> origin/master
   Licence: GPL2
  */
 
-
+/*
+ *
+ */ 
 
 /*
  * MakesBridge Gravity Forms Integration
