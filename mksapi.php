@@ -23,7 +23,7 @@ class mksapi {
 
     function mksapi($userId, $apiKey) {
         $this->apiKey = $apiKey;
-        $this->userId = $userId;
+        $this->userId = $userId;        
     }
 
     /*
@@ -119,6 +119,7 @@ class mksapi {
         $xml = new SimpleXMLElement($xmlstr);
         $xml->addAttribute('listName', 'Test List');
         $subscriber = $xml->addChild('subscriber');
+<<<<<<< HEAD
         $subscriber->email = $data['email'];
 <<<<<<< HEAD
         $subscriber->firstName = $data['name'];
@@ -127,11 +128,20 @@ class mksapi {
         $subscriber->firstName = $data['firstName'];
         $subscriber->lastName = $data['lastName'];        
 >>>>>>> added subscribe function
+=======
+        foreach($data as $key => $value){
+            $subscriber->$key = $data[$key];
+        };
+//        $subscriber->email = $data['email'];
+//        $subscriber->firstName = $data['firstName'];
+//        $subscriber->lastName = $data['lastName'];
+>>>>>>> cleaning up
         $response = wp_remote_post($this->url . 'addsubscriber/', array(
             'headers' => $headers,
             'sslverify' => false,
             'body' => $xml->asXML()
                 ));
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -177,6 +187,9 @@ class mksapi {
 =======
 =======
         print_r($xml->asXML());
+=======
+//        print_r($xml->asXML());
+>>>>>>> cleaning up
         return $response;
 >>>>>>> added subscribe function
     }

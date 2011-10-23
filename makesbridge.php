@@ -578,21 +578,15 @@ function mks_gf_submission($entry, $form) {
 
     $api = new mksapi($options['MKS_UserId'], $options['MKS_API_Token']);
     $api->login();
-    $res = $api->createSubscriber($data);
-    print_r($res);
-    print_r($data);
-}
-
-;
+    $api->createSubscriber($data);
+    return(true);
+};
 
 $options = get_option('makesbridge_options');
 require_once 'mksapi.php';
-include('ob_settings.php');
-include('ExampleOptions.php');
+//include('ob_settings.php');
+//include('ExampleOptions.php');
 
-function makesbridgeRequest() {
-    
-}
 
 function mks_gf_form() {
     $id = $_POST['id'];
@@ -1030,12 +1024,16 @@ class Makesbridge_widget extends WP_Widget {
         $mks_uid = $options['MKS_UserId'];
         $mks_api = $options['MKS_API_Token'];
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cleaning up
 //        $name = $_POST['firstname'];
 //        $email = $_POST['custemail'];
 //        $data = array(
 //            'name' => $_POST['name'],
 //            'email' => $_POST['email']
 //        );
+<<<<<<< HEAD
 =======
         $name = $_POST['firstname'];
         $email = $_POST['custemail'];
@@ -1044,6 +1042,8 @@ class Makesbridge_widget extends WP_Widget {
             'email' => $_POST['email']
         );
 >>>>>>> first commit
+=======
+>>>>>>> cleaning up
     }
 
     function widget() {
@@ -1063,6 +1063,7 @@ class Makesbridge_widget extends WP_Widget {
 
 function dashboard_widget() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 //    echo 'hello world';
 }
 
@@ -1075,13 +1076,20 @@ function add_dashboard() {
 //add_action('widgets_init', create_function('', 'return register_widget("Makesbridge_widget");'));
 =======
     echo 'hello world';
+=======
+//    echo 'hello world';
+>>>>>>> cleaning up
 }
 
 function add_dashboard() {
-    wp_add_dashboard_widget('mks_dashboard_widget', 'BridgeMail System', 'dashboard_widget');
+//    wp_add_dashboard_widget('mks_dashboard_widget', 'BridgeMail System', 'dashboard_widget');
 }
 
-add_action('wp_dashboard_setup', 'add_dashboard');
+//add_action('wp_dashboard_setup', 'add_dashboard');
 
+<<<<<<< HEAD
 add_action('widgets_init', create_function('', 'return register_widget("Makesbridge_widget");'));
 >>>>>>> first commit
+=======
+//add_action('widgets_init', create_function('', 'return register_widget("Makesbridge_widget");'));
+>>>>>>> cleaning up
