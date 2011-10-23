@@ -517,7 +517,7 @@ class GFMakesBridgeData {
     public static function retrieveFormSettings($id) {
         global $wpdb;
         $tableName = self::getMakesBridgeTableName();
-        $sql = $wpdb->prepare("SELECT id, form_id, is_active, meta, list_id FROM $tableName WHERE id=%d", $id);
+        $sql = $wpdb->prepare("SELECT id, form_id, is_active, meta, list_id FROM $tableName WHERE form_id=%d", $id);
         $results = $wpdb->get_results($sql, ARRAY_A);
         $result = $results[0];
         $result["meta"] = maybe_unserialize($result["meta"]);
