@@ -3,12 +3,11 @@
   Plugin Name: MakesBridge
   Description: MakesBridge plugin for WordPress
   Author: Christian Marth
-<<<<<<< HEAD
-  Version: 1.01
+  Version: 1.00
   Licence: GPL2
  */
 
-//SVN
+
 
 /*
  * MakesBridge Gravity Forms Integration
@@ -518,7 +517,7 @@ class GFMakesBridgeData {
     public static function retrieveFormSettings($id) {
         global $wpdb;
         $tableName = self::getMakesBridgeTableName();
-        $sql = $wpdb->prepare("SELECT id, form_id, is_active, meta, list_id FROM $tableName WHERE form_id=%d", $id);
+        $sql = $wpdb->prepare("SELECT id, form_id, is_active, meta, list_id FROM $tableName WHERE id=%d", $id);
         $results = $wpdb->get_results($sql, ARRAY_A);
         $result = $results[0];
         $result["meta"] = maybe_unserialize($result["meta"]);
@@ -558,272 +557,6 @@ require_once 'mksapi.php';
 
 function makesbridge($user_id) {
 
-=======
-  Version: 0.01
-  Licence: GPL2
- */
-
-add_action("gform_after_submission", "mks_gf_submission", 10, 2);
-
-function mks_gf_submission($entry, $form) {
-    $data = array();
-    
-    $data['firstName'] = $entry['4.3'];
-    $data['lastName'] = $entry['4.6'];
-    $data['email'] = $entry['3'];
-
-
-    
-    $options = get_option('makesbridge_options');
-
-    $api = new mksapi($options['MKS_UserId'], $options['MKS_API_Token']);
-    $api->login();
-    $api->createSubscriber($data);
-    return(true);
-};
-
-$options = get_option('makesbridge_options');
-require_once 'mksapi.php';
-//include('ob_settings.php');
-//include('ExampleOptions.php');
-
-
-function mks_gf_form() {
-    $id = $_POST['id'];
-    $form = RGFormsModel::get_form_meta($id);
-    $fields = GFCommon::get_section_fields($gform, $section_field_id);
-//    foreach($gform as $form){
-//        
-//    }
-
-    $options = get_option('makesbridge_options');
-
-    // Get A list of MakesBridge Custom Fields
-    $api = new mksapi($options['MKS_UserId'], $options['MKS_API_Token']);
-    $api->login();
-    $mksfields = $api->retrieveCustomFields();
-
-    if (is_array($form["fields"])) {
-        foreach ($form["fields"] as $field) {
-            if (is_array(rgar($field, "inputs"))) {
-                //If this is an address field, add full name to the list
-                if (RGFormsModel::get_input_type($field) == "address")
-                    $fields[] = array($field["id"], GFCommon::get_label($field));
-
-                foreach ($field["inputs"] as $input)
-                    $fields[] = array($input["id"], GFCommon::get_label($field, $input["id"]));
-            }
-            else if (!rgar($field, "displayOnly")) {
-                $fields[] = array($field["id"], GFCommon::get_label($field));
-            }
-        }
-    }
-
-    $standardFields = array(
-        'email',
-        'firstName',
-        'middleName',
-        'lastName',
-        'birthDate',
-        'gender',
-        'maritalStatus',
-        'occupation',
-        'householdIncome',
-        'educationLevel',
-        'addressLine1',
-        'addressLine2',
-        'city',
-        'stateCode',
-        'countryCode',
-        'areaCode',
-        'zip',
-        'telephone',
-        'industry',
-        'company',
-        'source',
-        'salesRep',
-        'salesStatus'
-    );
-//    $data = json_encode($fields);
-//      $data = "<select>\r\n";
-    $data = '<h3><label>Gravity Fields</label>MakesBridge Fields</h3>';
-    foreach ($fields as $field) {
-        $data .= '<label>' . $field[1] . '</label>';
-        $data .= "<select id=" . $field[0] . ">";
-        $data .= "<optgroup label='Standard Fields'>";
-
-        foreach ($standardFields as $standardField) {
-            $data .= '<option>';
-            $data .= $standardField;
-            $data .= '</option>';
-        };
-
-        $data .= "</optgroup>";
-        $data .= "<optgroup label='Custom Fields'>";
-        foreach ($mksfields as $mksfield) {
-            $data .= '<option>';
-            $data .= $mksfield->name;
-            $data .= '</option>';
-        };
-        $data .= "</optgroup>";
-        $data .= '<option>';
-        $data .= '[New Custom Field]';
-        $data .= '</option>';
-        $data .= '</select><br/>';
-//            $data .= "</option>\r\n";
-    }
-//    print_r($fields);
-//      $data .= '<select>';
-//    echo "<pre>";
-//    print_r($form[0]);
-//    echo "</pre>";
-    $res = new WP_Ajax_Response(array(
-                'data' => $data
-            ));
-    $res->send();
-}
-
-add_action('wp_ajax_mks_gf_form', 'mks_gf_form');
-
-
-/*
- * MakesBridge Gravity Forms Integration
- */
-
-function mks_gf_options() {
-    ?>
-    <style>
-        .mks_gf label{
-            width: 200px;
-            float: left;
-        }
-        h2{
-            color: #333;
-        }
-    </style>
-    <script type="text/javascript">
-        var ajaxUrl = '<?php bloginfo('wpurl'); ?>/wp-admin/admin-ajax.php';
-        jQuery(document).ready(function(){
-            jQuery('#mks_gform').change(function(){
-                var id = (jQuery(this).val());  
-                //                console.log(id);
-                jQuery.post(ajaxUrl,{
-                    action: 'mks_gf_form',
-                    id: id
-                },function(res){
-                    jQuery('#mks_gf_fields').html(jQuery(res).find('response_data').text());
-                    //                    console.log(res);
-                    //                   jQuery('#mks_gf_fields').html(res);
-                })
-            });
-                            
-            jQuery('select').live('change',function(){
-                //            console.log(jQuery(this).val());
-                if ( jQuery( this ).val() == '[New Custom Field]' ){
-                    field = "<em>Enter Field Name<input type='text' name=/></em>";
-                    jQuery(this).after( field );
-                }
-            })
-                        
-            jQuery('input[type="submit"]').click(function(){
-                jQuery('select').each(function(){
-                    console.log(jQuery(this).val());
-                    console.log(jQuery(this).attr('id'));
-                })
-            })
-        })
-    </script>
-
-    <table class="widefat" cellspacin="0">
-        <thead>
-            <tr>
-                <th class="manage-column column-cb check-column"></th>
-                <th>Form</th>
-                <th>MakesBridge List</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th class="manage-column column-cb check-column"></th>
-                <th>Form</th>
-                <th>MakesBridge List</th>
-            </tr>
-        </tfoot>
-    </table>
-    <div class="mks_gf">
-    <?
-    echo '<h2>MakesBridge GravityForms</h2>';
-    //Get a list of Gravity Forms Forms
-    $forms = RGFormsModel::get_forms();
-    //Create A Select Option for our Forms
-    echo '<label>Gravity Form</label>';
-    echo '<select id="mks_gform">';
-    foreach ($forms as $form) {
-        echo '<option value=' . $form->id . '>';
-        echo $form->title;
-        echo '</option>';
-    }
-    echo '</select><br/>';
-
-    //Get MakesBridge User Options
-    $options = get_option('makesbridge_options');
-
-    // Get A list of MakesBridge Custom Fields
-    $api = new mksapi($options['MKS_UserId'], $options['MKS_API_Token']);
-    $api->login();
-    $fields = $api->retrieveCustomFields();
-    $lists = $api->retrieveLists();
-
-
-    //Retrieve MKS Lists
-    echo '<label>MakesBridge List</label>';
-    echo '<select>';
-    foreach ($lists as $list) {
-        echo '<option>';
-        echo $list->name;
-        echo '</option>';
-    }
-    echo '</select>';
-
-
-
-    // Create A list of Gravity Form Fields
-//    foreach ($gform['fields'] as $gffields) {
-////        print_r($gffields['label']);
-//        echo $gffields['label'];
-//        echo '<select>';
-//        foreach ($fields as $field) {
-//            echo '<option>';
-//            echo $field->name;
-//            echo '</option>';
-//        }
-//        echo '</select> <br/>';
-//        echo $gfforms->label;
-//    }
-    ?>
-        <div id="mks_gf_fields">
-
-        </div> 
-        <input type="submit" class="button-primary"/>
-    </div>
-    <?
-    //Create a DropDown for MKS Custom Fields
-}
-
-function mks_gf_forminfo($id) {
-    $gform = RGFormsModel::get_form_meta($id);
-    return($gform);
-}
-
-function makesbridge($user_id) {
-
-
-
-
-    echo "<pre>";
-    print_r($user_id);
-    echo "</pre>";
->>>>>>> first commit
 
     echo "First Name :" . $user_id->data->first_name;
 
@@ -842,15 +575,7 @@ function MakesBridge_Menu() {
     add_menu_page("BridgeMail System", "BridgeMail", "manage_options", "makesbridge", "MKS_plugin_options_page");
     add_submenu_page('makesbridge', 'Manage MakesBridge Settings', 'Settings', 'manage_options', 'makesbridge', 'MKS_plugin_options_page');
     add_submenu_page('makesbridge', 'Manage Options', 'Manage Campaigns', 'manage_options', 'mks_campaigns', 'MKS_plugin_options_page');
-<<<<<<< HEAD
-<<<<<<< HEAD
     add_submenu_page('makesbridge', 'Gravity Settings', 'GravityForms Settings', 'manage_options', 'mks_gf', array('GFMakesBridge', 'mks_gf_options'));
-=======
-    add_submenu_page('makesbridge', 'Gravity Settings', 'GravityForms Settings', 'manage_options', 'mks_gf', 'MKS_plugin_options_page');
->>>>>>> first commit
-=======
-    add_submenu_page('makesbridge', 'Gravity Settings', 'GravityForms Settings', 'manage_options', 'mks_gf', 'mks_gf_options');
->>>>>>> commit
     add_options_page('makesbridge', 'Mange Campaigns', 'Manage MakesBridge Campaigns', 'manage_options', 'MKS_plugin_options_page');
 
 //	add_submenu_page( 'gprojects', 'Manage Categories', 'Manage Categories', 'manage_options', 'gprojects_cats', 'gprojects_cats_page');
@@ -862,13 +587,7 @@ function MakesBridge_Menu() {
 }
 
 //add_action('admin_menu', 'MKS_plugin_admin_add_page');    
-<<<<<<< HEAD
 //add_action('init', 'mks_handle_request');
-=======
-// Check API KEY
-add_action('init', 'mks_handle_request');
-
->>>>>>> first commit
 //
 function mks_handle_request() {
     if (isset($_POST['mks_action'])) {
@@ -886,33 +605,11 @@ function MKS_plugin_options_page() {
     <div>
         <h2>MakesBridge Plugin Settings</h2>
         <p>
-<<<<<<< HEAD
             <em>Don't have a MakesBridge Account?<a href="http://makesbridge.com/request-15-day-trial?pmc=CLDGRP" target="_BLANK">Sign up for a free trial</a></em>
         </p>
         <form action="options.php" method="post">
             <?php settings_fields('makesbridge_options');
             do_settings_sections('MakesBridge'); ?>
-=======
-            <em>Don't have a MakesBridge Account? 
-                <a href="http://makesbridge.com/request-15-day-trial?pmc=CLDGRP" target="_BLANK">
-                    Sign up for a free trial
-                </a>
-            </em>
-        </p>
-        <form action="options.php" method="post">
-<<<<<<< HEAD
-<<<<<<< HEAD
-    <?php settings_fields('makesbridge_options');
-    do_settings_sections('MakesBridge'); ?>
->>>>>>> first commit
-=======
-            <?php settings_fields('makesbridge_options');
-            do_settings_sections('MakesBridge'); ?>
->>>>>>> commit
-=======
-    <?php settings_fields('makesbridge_options');
-    do_settings_sections('MakesBridge'); ?>
->>>>>>> added subscribe function
             <input type="hidden" name="mks_action" value="api_settings" />
             <input name="Submit" type="submit" value="Save Changes" class="button"/>
         </form>
@@ -993,25 +690,11 @@ function verify_api() {
 add_action('init', 'MKS_subscribe');
 
 function MKS_subscribe() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> commit
     if (isset($_POST['name'])) {
         $api = new mksapi($mks_uid, $mks_api);
         $api->login();
         $api->createSubscriber($data);
         return;
-<<<<<<< HEAD
-=======
-    if(isset($_POST['name'])){
-    $api = new mksapi($mks_uid, $mks_api);
-    $api->login();
-    $api->createSubscriber($data); 
-    return;
->>>>>>> first commit
-=======
->>>>>>> commit
     }
 
 //    print_r($_POST);
@@ -1023,27 +706,12 @@ class Makesbridge_widget extends WP_Widget {
         $options = get_option('makesbridge_options');
         $mks_uid = $options['MKS_UserId'];
         $mks_api = $options['MKS_API_Token'];
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> cleaning up
 //        $name = $_POST['firstname'];
 //        $email = $_POST['custemail'];
 //        $data = array(
 //            'name' => $_POST['name'],
 //            'email' => $_POST['email']
 //        );
-<<<<<<< HEAD
-=======
-        $name = $_POST['firstname'];
-        $email = $_POST['custemail'];
-        $data = array(
-            'name' => $_POST['name'],
-            'email' => $_POST['email']
-        );
->>>>>>> first commit
-=======
->>>>>>> cleaning up
     }
 
     function widget() {
@@ -1062,8 +730,6 @@ class Makesbridge_widget extends WP_Widget {
 }
 
 function dashboard_widget() {
-<<<<<<< HEAD
-<<<<<<< HEAD
 //    echo 'hello world';
 }
 
@@ -1074,22 +740,3 @@ function add_dashboard() {
 //add_action('wp_dashboard_setup', 'add_dashboard');
 
 //add_action('widgets_init', create_function('', 'return register_widget("Makesbridge_widget");'));
-=======
-    echo 'hello world';
-=======
-//    echo 'hello world';
->>>>>>> cleaning up
-}
-
-function add_dashboard() {
-//    wp_add_dashboard_widget('mks_dashboard_widget', 'BridgeMail System', 'dashboard_widget');
-}
-
-//add_action('wp_dashboard_setup', 'add_dashboard');
-
-<<<<<<< HEAD
-add_action('widgets_init', create_function('', 'return register_widget("Makesbridge_widget");'));
->>>>>>> first commit
-=======
-//add_action('widgets_init', create_function('', 'return register_widget("Makesbridge_widget");'));
->>>>>>> cleaning up
