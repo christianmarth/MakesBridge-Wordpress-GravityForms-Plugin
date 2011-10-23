@@ -86,6 +86,7 @@ class mksapi {
             'auth_tk' => $this->authToken
         );
 <<<<<<< HEAD
+<<<<<<< HEAD
         $xmlstr = "<?xml version='1.0' encoding='utf-8'?>
 	    <addsubscriber></addsubscriber>";
         $xml = new SimpleXMLElement($xmlstr);
@@ -110,19 +111,28 @@ class mksapi {
 
 =======
         $user = get_userdata($user_id);
+=======
+//        $user = get_userdata($user_id);
+>>>>>>> added subscribe function
         $xmlstr = "<?xml version='1.0' encoding='utf-8'?>
 	    <addsubscriber></addsubscriber>";
         $xml = new SimpleXMLElement($xmlstr);
-        $xml->addAttribute('listName', 'Clients');
+        $xml->addAttribute('listName', 'Test List');
         $subscriber = $xml->addChild('subscriber');
         $subscriber->email = $data['email'];
+<<<<<<< HEAD
         $subscriber->firstName = $data['name'];
 >>>>>>> first commit
+=======
+        $subscriber->firstName = $data['firstName'];
+        $subscriber->lastName = $data['lastName'];        
+>>>>>>> added subscribe function
         $response = wp_remote_post($this->url . 'addsubscriber/', array(
             'headers' => $headers,
             'sslverify' => false,
             'body' => $xml->asXML()
                 ));
+<<<<<<< HEAD
 <<<<<<< HEAD
 
         $data = wp_remote_retrieve_body($response);
@@ -165,6 +175,10 @@ class mksapi {
 }
 //End MakesBridge API
 =======
+=======
+        print_r($xml->asXML());
+        return $response;
+>>>>>>> added subscribe function
     }
 <<<<<<< HEAD
 }

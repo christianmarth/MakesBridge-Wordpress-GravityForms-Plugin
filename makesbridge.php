@@ -563,23 +563,27 @@ function makesbridge($user_id) {
   Licence: GPL2
  */
 
-add_action("gform_after_submission","mks_gf_submission" , 10 , 2);
+add_action("gform_after_submission", "mks_gf_submission", 10, 2);
 
-function mks_gf_submission($entry,$form){
-    $firstName = $entry['4.3'];
-    $lastName = $entry['4.6'];
-    $email = $entry['3'];
+function mks_gf_submission($entry, $form) {
+    $data = array();
     
-    $xml = new SimpleXMLElement();
+    $data['firstName'] = $entry['4.3'];
+    $data['lastName'] = $entry['4.6'];
+    $data['email'] = $entry['3'];
+
+
     
     $options = get_option('makesbridge_options');
-    
-    $api = new mksapi();
+
+    $api = new mksapi($options['MKS_UserId'], $options['MKS_API_Token']);
     $api->login();
-    
-    
-    
-};
+    $res = $api->createSubscriber($data);
+    print_r($res);
+    print_r($data);
+}
+
+;
 
 $options = get_option('makesbridge_options');
 require_once 'mksapi.php';
@@ -620,7 +624,7 @@ function mks_gf_form() {
             }
         }
     }
-    
+
     $standardFields = array(
         'email',
         'firstName',
@@ -651,15 +655,15 @@ function mks_gf_form() {
     $data = '<h3><label>Gravity Fields</label>MakesBridge Fields</h3>';
     foreach ($fields as $field) {
         $data .= '<label>' . $field[1] . '</label>';
-        $data .= "<select id=" . $field[0] .">";
+        $data .= "<select id=" . $field[0] . ">";
         $data .= "<optgroup label='Standard Fields'>";
 
-        foreach($standardFields as $standardField){
+        foreach ($standardFields as $standardField) {
             $data .= '<option>';
             $data .= $standardField;
             $data .= '</option>';
         };
-        
+
         $data .= "</optgroup>";
         $data .= "<optgroup label='Custom Fields'>";
         foreach ($mksfields as $mksfield) {
@@ -718,15 +722,15 @@ function mks_gf_options() {
                     //                   jQuery('#mks_gf_fields').html(res);
                 })
             });
-                
+                            
             jQuery('select').live('change',function(){
-//            console.log(jQuery(this).val());
+                //            console.log(jQuery(this).val());
                 if ( jQuery( this ).val() == '[New Custom Field]' ){
                     field = "<em>Enter Field Name<input type='text' name=/></em>";
                     jQuery(this).after( field );
                 }
             })
-            
+                        
             jQuery('input[type="submit"]').click(function(){
                 jQuery('select').each(function(){
                     console.log(jQuery(this).val());
@@ -735,7 +739,7 @@ function mks_gf_options() {
             })
         })
     </script>
-    
+
     <table class="widefat" cellspacin="0">
         <thead>
             <tr>
@@ -753,43 +757,43 @@ function mks_gf_options() {
         </tfoot>
     </table>
     <div class="mks_gf">
-        <?
-        echo '<h2>MakesBridge GravityForms</h2>';
-        //Get a list of Gravity Forms Forms
-        $forms = RGFormsModel::get_forms();
-        //Create A Select Option for our Forms
-        echo '<label>Gravity Form</label>';
-        echo '<select id="mks_gform">';
-        foreach ($forms as $form) {
-            echo '<option value=' . $form->id . '>';
-            echo $form->title;
-            echo '</option>';
-        }
-        echo '</select><br/>';
+    <?
+    echo '<h2>MakesBridge GravityForms</h2>';
+    //Get a list of Gravity Forms Forms
+    $forms = RGFormsModel::get_forms();
+    //Create A Select Option for our Forms
+    echo '<label>Gravity Form</label>';
+    echo '<select id="mks_gform">';
+    foreach ($forms as $form) {
+        echo '<option value=' . $form->id . '>';
+        echo $form->title;
+        echo '</option>';
+    }
+    echo '</select><br/>';
 
-        //Get MakesBridge User Options
-        $options = get_option('makesbridge_options');
+    //Get MakesBridge User Options
+    $options = get_option('makesbridge_options');
 
-        // Get A list of MakesBridge Custom Fields
-        $api = new mksapi($options['MKS_UserId'], $options['MKS_API_Token']);
-        $api->login();
-        $fields = $api->retrieveCustomFields();
-        $lists = $api->retrieveLists();
-
-
-        //Retrieve MKS Lists
-        echo '<label>MakesBridge List</label>';
-        echo '<select>';
-        foreach ($lists as $list) {
-            echo '<option>';
-            echo $list->name;
-            echo '</option>';
-        }
-        echo '</select>';
+    // Get A list of MakesBridge Custom Fields
+    $api = new mksapi($options['MKS_UserId'], $options['MKS_API_Token']);
+    $api->login();
+    $fields = $api->retrieveCustomFields();
+    $lists = $api->retrieveLists();
 
 
+    //Retrieve MKS Lists
+    echo '<label>MakesBridge List</label>';
+    echo '<select>';
+    foreach ($lists as $list) {
+        echo '<option>';
+        echo $list->name;
+        echo '</option>';
+    }
+    echo '</select>';
 
-        // Create A list of Gravity Form Fields
+
+
+    // Create A list of Gravity Form Fields
 //    foreach ($gform['fields'] as $gffields) {
 ////        print_r($gffields['label']);
 //        echo $gffields['label'];
@@ -802,7 +806,7 @@ function mks_gf_options() {
 //        echo '</select> <br/>';
 //        echo $gfforms->label;
 //    }
-        ?>
+    ?>
         <div id="mks_gf_fields">
 
         </div> 
@@ -903,6 +907,7 @@ function MKS_plugin_options_page() {
         </p>
         <form action="options.php" method="post">
 <<<<<<< HEAD
+<<<<<<< HEAD
     <?php settings_fields('makesbridge_options');
     do_settings_sections('MakesBridge'); ?>
 >>>>>>> first commit
@@ -910,6 +915,10 @@ function MKS_plugin_options_page() {
             <?php settings_fields('makesbridge_options');
             do_settings_sections('MakesBridge'); ?>
 >>>>>>> commit
+=======
+    <?php settings_fields('makesbridge_options');
+    do_settings_sections('MakesBridge'); ?>
+>>>>>>> added subscribe function
             <input type="hidden" name="mks_action" value="api_settings" />
             <input name="Submit" type="submit" value="Save Changes" class="button"/>
         </form>
