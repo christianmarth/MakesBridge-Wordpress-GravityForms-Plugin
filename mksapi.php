@@ -2,6 +2,7 @@
 
 class mksapi {
 
+<<<<<<< HEAD
     var $url = 'https://api.bridgemailsystem.com/pms/services/'; //MakesBridge API URL
     
     var $apiKey; //MakesBridge API Access Token
@@ -9,6 +10,16 @@ class mksapi {
     var $userId; //MakesBridge API Username
     
     var $authToken; //Authentication Token
+=======
+    //MakesBridge API URL
+    var $url = 'https://api.bridgemailsystem.com/pms/services/';
+    //MakesBridge API Access Token
+    var $apiKey;
+    //MakesBridge API Username
+    var $userId;
+    //Authentication Token
+    var $authToken;
+>>>>>>> first commit
 
     function mksapi($userId, $apiKey) {
         $this->apiKey = $apiKey;
@@ -63,13 +74,18 @@ class mksapi {
         return($data);
     }
 
+<<<<<<< HEAD
     //Create Subscriber Function
     function createSubscriber($data, $list) {
+=======
+    function createSubscriber($data) {
+>>>>>>> first commit
         $headers = array(
             'Content-type' => 'text/xml',
             'userId' => $this->userId,
             'auth_tk' => $this->authToken
         );
+<<<<<<< HEAD
         $xmlstr = "<?xml version='1.0' encoding='utf-8'?>
 	    <addsubscriber></addsubscriber>";
         $xml = new SimpleXMLElement($xmlstr);
@@ -92,11 +108,22 @@ class mksapi {
             }
         }
 
+=======
+        $user = get_userdata($user_id);
+        $xmlstr = "<?xml version='1.0' encoding='utf-8'?>
+	    <addsubscriber></addsubscriber>";
+        $xml = new SimpleXMLElement($xmlstr);
+        $xml->addAttribute('listName', 'Clients');
+        $subscriber = $xml->addChild('subscriber');
+        $subscriber->email = $data['email'];
+        $subscriber->firstName = $data['name'];
+>>>>>>> first commit
         $response = wp_remote_post($this->url . 'addsubscriber/', array(
             'headers' => $headers,
             'sslverify' => false,
             'body' => $xml->asXML()
                 ));
+<<<<<<< HEAD
 
         $data = wp_remote_retrieve_body($response);
         $data = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
@@ -137,3 +164,7 @@ class mksapi {
 
 }
 //End MakesBridge API
+=======
+    }
+}
+>>>>>>> first commit

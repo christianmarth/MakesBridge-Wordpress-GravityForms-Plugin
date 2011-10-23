@@ -3,6 +3,7 @@
   Plugin Name: MakesBridge
   Description: MakesBridge plugin for WordPress
   Author: Christian Marth
+<<<<<<< HEAD
   Version: 1.01
   Licence: GPL2
  */
@@ -557,6 +558,28 @@ require_once 'mksapi.php';
 
 function makesbridge($user_id) {
 
+=======
+  Version: 0.01
+  Licence: GPL2
+ */
+
+$options = get_option('makesbridge_options');
+require_once 'mksapi.php';
+include('ob_settings.php');
+include('ExampleOptions.php');
+
+function makesbridgeRequest() {
+}
+
+function makesbridge($user_id) {
+    
+    
+    
+    
+    echo "<pre>";
+    print_r($user_id);
+    echo "</pre>";
+>>>>>>> first commit
 
     echo "First Name :" . $user_id->data->first_name;
 
@@ -575,7 +598,11 @@ function MakesBridge_Menu() {
     add_menu_page("BridgeMail System", "BridgeMail", "manage_options", "makesbridge", "MKS_plugin_options_page");
     add_submenu_page('makesbridge', 'Manage MakesBridge Settings', 'Settings', 'manage_options', 'makesbridge', 'MKS_plugin_options_page');
     add_submenu_page('makesbridge', 'Manage Options', 'Manage Campaigns', 'manage_options', 'mks_campaigns', 'MKS_plugin_options_page');
+<<<<<<< HEAD
     add_submenu_page('makesbridge', 'Gravity Settings', 'GravityForms Settings', 'manage_options', 'mks_gf', array('GFMakesBridge', 'mks_gf_options'));
+=======
+    add_submenu_page('makesbridge', 'Gravity Settings', 'GravityForms Settings', 'manage_options', 'mks_gf', 'MKS_plugin_options_page');
+>>>>>>> first commit
     add_options_page('makesbridge', 'Mange Campaigns', 'Manage MakesBridge Campaigns', 'manage_options', 'MKS_plugin_options_page');
 
 //	add_submenu_page( 'gprojects', 'Manage Categories', 'Manage Categories', 'manage_options', 'gprojects_cats', 'gprojects_cats_page');
@@ -587,7 +614,13 @@ function MakesBridge_Menu() {
 }
 
 //add_action('admin_menu', 'MKS_plugin_admin_add_page');    
+<<<<<<< HEAD
 //add_action('init', 'mks_handle_request');
+=======
+// Check API KEY
+add_action('init', 'mks_handle_request');
+
+>>>>>>> first commit
 //
 function mks_handle_request() {
     if (isset($_POST['mks_action'])) {
@@ -605,11 +638,23 @@ function MKS_plugin_options_page() {
     <div>
         <h2>MakesBridge Plugin Settings</h2>
         <p>
+<<<<<<< HEAD
             <em>Don't have a MakesBridge Account?<a href="http://makesbridge.com/request-15-day-trial?pmc=CLDGRP" target="_BLANK">Sign up for a free trial</a></em>
         </p>
         <form action="options.php" method="post">
             <?php settings_fields('makesbridge_options');
             do_settings_sections('MakesBridge'); ?>
+=======
+            <em>Don't have a MakesBridge Account? 
+                <a href="http://makesbridge.com/request-15-day-trial?pmc=CLDGRP" target="_BLANK">
+                    Sign up for a free trial
+                </a>
+            </em>
+        </p>
+        <form action="options.php" method="post">
+    <?php settings_fields('makesbridge_options');
+    do_settings_sections('MakesBridge'); ?>
+>>>>>>> first commit
             <input type="hidden" name="mks_action" value="api_settings" />
             <input name="Submit" type="submit" value="Save Changes" class="button"/>
         </form>
@@ -690,11 +735,19 @@ function verify_api() {
 add_action('init', 'MKS_subscribe');
 
 function MKS_subscribe() {
+<<<<<<< HEAD
     if (isset($_POST['name'])) {
         $api = new mksapi($mks_uid, $mks_api);
         $api->login();
         $api->createSubscriber($data);
         return;
+=======
+    if(isset($_POST['name'])){
+    $api = new mksapi($mks_uid, $mks_api);
+    $api->login();
+    $api->createSubscriber($data); 
+    return;
+>>>>>>> first commit
     }
 
 //    print_r($_POST);
@@ -706,12 +759,21 @@ class Makesbridge_widget extends WP_Widget {
         $options = get_option('makesbridge_options');
         $mks_uid = $options['MKS_UserId'];
         $mks_api = $options['MKS_API_Token'];
+<<<<<<< HEAD
 //        $name = $_POST['firstname'];
 //        $email = $_POST['custemail'];
 //        $data = array(
 //            'name' => $_POST['name'],
 //            'email' => $_POST['email']
 //        );
+=======
+        $name = $_POST['firstname'];
+        $email = $_POST['custemail'];
+        $data = array(
+            'name' => $_POST['name'],
+            'email' => $_POST['email']
+        );
+>>>>>>> first commit
     }
 
     function widget() {
@@ -730,6 +792,7 @@ class Makesbridge_widget extends WP_Widget {
 }
 
 function dashboard_widget() {
+<<<<<<< HEAD
 //    echo 'hello world';
 }
 
@@ -740,3 +803,15 @@ function add_dashboard() {
 //add_action('wp_dashboard_setup', 'add_dashboard');
 
 //add_action('widgets_init', create_function('', 'return register_widget("Makesbridge_widget");'));
+=======
+    echo 'hello world';
+}
+
+function add_dashboard() {
+    wp_add_dashboard_widget('mks_dashboard_widget', 'BridgeMail System', 'dashboard_widget');
+}
+
+add_action('wp_dashboard_setup', 'add_dashboard');
+
+add_action('widgets_init', create_function('', 'return register_widget("Makesbridge_widget");'));
+>>>>>>> first commit
