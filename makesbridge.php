@@ -572,47 +572,117 @@ function makesbridgeRequest() {
     
 }
 
+function mks_gf_form() {
+    $id = $_POST['id'];
+    $form = RGFormsModel::get_form_meta($id);
+    $fields = GFCommon::get_section_fields($gform, $section_field_id);
+//    foreach($gform as $form){
+//        
+//    }
+
+    $options = get_option('makesbridge_options');
+
+    // Get A list of MakesBridge Custom Fields
+    $api = new mksapi($options['MKS_UserId'], $options['MKS_API_Token']);
+    $api->login();
+    $mksfields = $api->retrieveCustomFields();
+    
+    $res = new WP_Ajax_Response(array(
+        'data' => 'hello world'
+    ));
+    $res->send();
+//echo 'hello world';
+//    if (is_array($form["fields"])) {
+//        foreach ($form["fields"] as $field) {
+//            if (is_array(rgar($field, "inputs"))) {
+//
+//                //If this is an address field, add full name to the list
+//                if (RGFormsModel::get_input_type($field) == "address")
+//                    $fields[] = array($field["id"], GFCommon::get_label($field));
+//
+//                foreach ($field["inputs"] as $input)
+//                    $fields[] = array($input["id"], GFCommon::get_label($field, $input["id"]));
+//            }
+//            else if (!rgar($field, "displayOnly")) {
+//                $fields[] = array($field["id"], GFCommon::get_label($field));
+//            }
+//        }
+//    }
+//        echo "<select>\r\n";
+//    foreach ($fields as $field) {
+//        echo $field[1];
+//        echo "<select>\r\n";
+//        foreach ($mksfields as $mksfield) {
+//            echo '<option>';
+//            echo $mksfield->name;
+//            echo '</option>';
+//        }
+//        echo '</select>';
+
+//            echo "</option>\r\n";
+//    }
+//    print_r($fields);
+//        echo '<select>';
+//    echo "<pre>";
+//    print_r($form[0]);
+//    echo "</pre>";
+}
+
+add_action('wp_ajax_mks_gf_form', 'mks_gf_form');
+
 
 /*
  * MakesBridge Gravity Forms Integration
  */
+
 function mks_gf_options() {
-    
     ?>
-<style>
-    h2{
-        color: #333;
-    }
-</style>
-<script type="text/javascript">
-    jQuery(document).ready(function(){
-        jQuery('#mks_gform').change(function(){
-            alert(jQuery(this).val())
+    <style>
+        .mks_gf label{
+            width: 200px;
+        }
+        h2{
+            color: #333;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var ajaxUrl = '<?php bloginfo('wpurl'); ?>/wp-admin/admin-ajax.php';
+        jQuery(document).ready(function(){
+            jQuery('#mks_gform').change(function(){
+                var id = (jQuery(this).val());  
+//                console.log(id);
+                jQuery.post(ajaxUrl,{
+                    action: 'mks_gf_form',
+                    id: id
+                },function(res){
+//                    console.log(res);
+//                   jQuery('#mks_gf_fields').html(res);
+                    console.log(res);
+                });
+
+            })
         })
-    })
-</script>
-<?
+    </script>
+    <div class="mks_gf">
+    <?
     echo '<h2>MakesBridge GravityForms</h2>';
 
     //Get a list of Gravity Forms Forms
     $forms = RGFormsModel::get_forms();
-    echo '<pre>';
-//    print_r($forms);
-    echo '</pre>';
+
 
     //Create A Select Option for our Forms
-    echo 'Gravity Form';
+    echo '<label>Gravity Form<label>';
     echo '<select id="mks_gform">';
     foreach ($forms as $form) {
         echo '<option value=' . $form->id . '>';
         echo $form->title;
         echo '</option>';
     }
-    echo '</select>';
+    echo '</select><br/>';
 
 
-    //Retrieve a single Gravity form from ID
-    $gform = RGFormsModel::get_form_meta('1');
 
     //Get MakesBridge User Options
     $options = get_option('makesbridge_options');
@@ -622,38 +692,40 @@ function mks_gf_options() {
     $api->login();
     $fields = $api->retrieveCustomFields();
     $lists = $api->retrieveLists();
-    
+
 
     //Retrieve MKS Lists
     echo 'MakesBridge List';
     echo '<select>';
-    foreach ($lists as $list){
+    foreach ($lists as $list) {
         echo '<option>';
-            echo $list->name;
+        echo $list->name;
         echo '</option>';
     }
     echo '</select>';
-    
-    echo '<pre>';
-//    print_r($lists);
-//    print_r($gform['fields']);
-    echo '</pre>';
+
+
 
     // Create A list of Gravity Form Fields
-    foreach ($gform['fields'] as $gffields) {
-//        print_r($gffields['label']);
-        echo $gffields['label'];
-        echo '<select>';
-        foreach ($fields as $field) {
-            echo '<option>';
-            echo $field->name;
-            echo '</option>';
-        }
-        echo '</select> <br/>';
+//    foreach ($gform['fields'] as $gffields) {
+////        print_r($gffields['label']);
+//        echo $gffields['label'];
+//        echo '<select>';
+//        foreach ($fields as $field) {
+//            echo '<option>';
+//            echo $field->name;
+//            echo '</option>';
+//        }
+//        echo '</select> <br/>';
 
 
 //        echo $gfforms->label;
-    }
+//    }
+    
+    ?>
+    <div id="mks_gf_fields"></div> 
+    </div>
+    <?
 
     //Create a DropDown for MKS Custom Fields
 }
