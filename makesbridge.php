@@ -3,11 +3,11 @@
   Plugin Name: MakesBridge
   Description: MakesBridge plugin for WordPress
   Author: Christian Marth
-  Version: 1.02
+  Version: 1.03
   Licence: GPL2
  */
 
-
+ 
 
 /*
  * MakesBridge Gravity Forms Integration
