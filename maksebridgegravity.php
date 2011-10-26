@@ -24,6 +24,7 @@ class GFMakesBridge {
         $setting = $_POST['settings'];
         $formId = $_POST['formId'];
         $listId = $_POST['listId'];
+        $workflow = $_POST['workflow'];
         if (isset($_POST['id'])) {
             $id = $_POST['id'];
         } else {
@@ -251,6 +252,8 @@ class GFMakesBridge {
                             }
                         }
                     });
+                    
+                    
 
                     /*
                      * Send Ajax request to server
@@ -264,6 +267,7 @@ class GFMakesBridge {
                         formId: formId,
                         listId: mksList,
                         id: settId,
+                        worflow: '',
                         settings: data['fields']
                     },function(res){
                         if(settId == '0'){
@@ -309,8 +313,17 @@ class GFMakesBridge {
                         })
                     })
                 })
-                                                                                                        
-                                                                                                        
+                                        
+                                        
+                /*  
+                 *  Workflows
+                 */ 
+                             
+                jQuery('#mks_wk_cb').change(function(){
+                (jQuery(this).is(':checked')) ? jQuery('#mksworkflow').show() : jQuery('#mksworkflow').hide() ;
+                })
+                
+                
                 jQuery('#GF_Settings a[title="GF_Settings_Delete"]').live('click',function(e){
                     var res = confirm('Are You Sure You Want To Delete')
                     if (res == true){
@@ -401,9 +414,11 @@ class GFMakesBridge {
             echo '</select><br/>';
 
             echo '<label>Manually Add To  Workflow</label>';
-            echo '<select id="mksworkflow">';
+            echo '<input id="mks_wk_cb" type="checkbox" name="workflow"/>';
+            echo '<select id="mksworkflow" style="display: none;">';
             foreach ($workflows as $workflow) {
                 if ($workflow->manualAddition == 'true') {
+                    echo '<option></option>';
                     echo '<optgroup label="' . $workflow->name . '">';
                     foreach ($workflow->Steps->Step as $step) {
                         echo '<option>';
@@ -413,11 +428,13 @@ class GFMakesBridge {
                     echo '</optgroup>';
                 }
             }
-            echo '</select><br/>';
+            echo '</select>';
             ?>
             <div id="mks_gf_fields">
 
-            </div> 
+            </div>
+        </div>
+        <div style="clear:both">
             <input type="submit" class="button-primary"/>
         </div>
         <?
