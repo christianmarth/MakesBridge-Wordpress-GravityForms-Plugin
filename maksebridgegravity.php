@@ -399,7 +399,7 @@ class GFMakesBridge {
             $api->login();
             $fields = $api->retrieveCustomFields();
             $lists = $api->retrieveLists();
-            $workflows = $api->retrieveWorkflowList();
+//            $workflows = $api->retrieveWorkflowList();
 //            print_r($workflows);
             //Retrieve MKS Lists
             echo '<label>MakesBridge List</label>';
@@ -413,12 +413,12 @@ class GFMakesBridge {
             }
             echo '</select><br/>';
 
-            echo '<label>Manually Add To  Workflow</label>';
+/*            echo '<label>Manually Add To  Workflow</label>';
             echo '<input id="mks_wk_cb" type="checkbox" name="workflow"/>';
             echo '<select id="mksworkflow" style="display: none;">';
             foreach ($workflows as $workflow) {
-                if ($workflow->manualAddition == 'true') {
                     echo '<option></option>';
+                if ($workflow->manualAddition == 'true') {
                     echo '<optgroup label="' . $workflow->name . '">';
                     foreach ($workflow->Steps->Step as $step) {
                         echo '<option>';
@@ -428,7 +428,7 @@ class GFMakesBridge {
                     echo '</optgroup>';
                 }
             }
-            echo '</select>';
+            echo '</select>'; */
             ?>
             <div id="mks_gf_fields">
 
