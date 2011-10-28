@@ -148,7 +148,7 @@ function MKS_plugin_section_text() {
     echo '<p>Please enter your MakesBridge login credentials here.</p>';
 }
 
-add_action("user_register", "makesbridge");
+//add_action("user_register", "makesbridge");
 
 function verify_api() {
     $options = get_option('makesbridge_options');
