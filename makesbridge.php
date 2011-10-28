@@ -141,6 +141,19 @@ function MKS_plugin_setting_MKS_Tracking() {
     echo ($options['MKS_tracking_snippet'] == '') ? '' : $options['MKS_tracking_snippet'];
     echo "</textarea>";
 }
+
+//Add Tracking Snippet to blog </head>
+
+if ($options['MKS_tracking_snippet'] !== '') {
+    add_action('wp_head', 'mks_insert_tracking');
+
+    function mks_insert_tracking() {
+        $options = get_option('makesbridge_options');
+        echo $options['MKS_tracking_snippet'];
+    }
+
+}
+
 // validate our options
 function MKS_options_validate($input) {
 //    $newinput['text_string'] = trim($input['text_string']);
@@ -165,6 +178,7 @@ function verify_api() {
 }
 
 //add_action('init', 'MKS_subscribe');
+
 
 function MKS_subscribe() {
     if (isset($_POST['name'])) {
