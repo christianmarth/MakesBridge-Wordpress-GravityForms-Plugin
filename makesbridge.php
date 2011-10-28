@@ -41,12 +41,10 @@ add_action('admin_menu', 'MakesBridge_Menu');
 function MakesBridge_Menu() {
 
 
-
-
     add_menu_page("BridgeMail System", "MakesBridge", "manage_options", "makesbridge", "MKS_plugin_options_page");
     add_submenu_page('makesbridge', 'Manage MakesBridge Settings', 'Settings', 'manage_options', 'makesbridge', 'MKS_plugin_options_page');
-    add_submenu_page('makesbridge', 'Manage Options', 'Manage Campaigns', 'manage_options', 'mks_campaigns', 'MKS_plugin_options_page');
-    add_options_page('makesbridge', 'Mange Campaigns', 'Manage MakesBridge Campaigns', 'manage_options', 'MKS_plugin_options_page');
+    add_submenu_page('makesbridge', 'Manage Options', 'Manage Campaigns', 'manage_options', 'mks_campaigns', array('makesbridgeCampaigns','mks_campaigns'));
+//    add_submenu_page('makesbridge', 'Mange Campaigns', 'Manage MakesBridge Campaigns', 'manage_options', 'MKS_plugin_options_page');
     add_submenu_page('makesbridge', 'Gravity Settings', 'GravityForms Settings', 'manage_options', 'mks_gf', array('GFMakesBridge', 'mks_gf_options'));
 
 //	add_submenu_page( 'gprojects', 'Manage Categories', 'Manage Categories', 'manage_options', 'gprojects_cats', 'gprojects_cats_page');
@@ -208,6 +206,51 @@ function add_dashboard() {
 //    wp_add_dashboard_widget('mks_dashboard_widget', 'BridgeMail System', 'dashboard_widget');
 }
 
-//add_action('wp_dashboard_setup', 'add_dashboard');
 
+/*
+ * Class for MakesBridge Campaigns
+ * 
+ */
+class makesbridgeCampaigns {
+
+    function mks_campaigns() {
+        $options = get_option('makesbridge_options');
+        $api = new mksapi($options['MKS_UserId'], $options['MKS_API_Token']);
+//        $api->newLogin();
+        $api->login();
+        $campaign = $api->getCampaignInfo('1');
+        ?>
+        <table class="widefat">
+            <thead>
+                <tr>
+                    <th>Campaign Name</th>
+                    <th>Created Date</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Campaign Name</th>
+                    <th>Created Date</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                </tr>
+            </tfoot>
+            <tbody><? foreach ($campaign as $camp){
+                echo '<tr>';
+                    echo '<td><a href="' . $camp->id . '">' . $camp->name . '</a></td>';
+                    echo '<td>' . $camp->creationDate . '</td>';
+                    echo '<td>' . $camp->type . '</td>';
+                    echo '<td>' . $camp->status . '</td>';
+                echo '</tr>';
+            } ?>
+            </tbody>
+        </table>
+        <?
+    }
+
+}
+
+//add_action('wp_dashboard_setup', 'add_dashboard');
 //add_action('widgets_init', create_function('', 'return register_widget("Makesbridge_widget");'));
