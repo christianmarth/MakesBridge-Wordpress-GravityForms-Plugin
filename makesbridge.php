@@ -158,7 +158,7 @@ function verify_api() {
     $api->testSettings();
 }
 
-add_action('init', 'MKS_subscribe');
+//add_action('init', 'MKS_subscribe');
 
 function MKS_subscribe() {
     if (isset($_POST['name'])) {
