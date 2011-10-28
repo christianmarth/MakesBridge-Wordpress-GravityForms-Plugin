@@ -211,7 +211,7 @@ class GFMakesBridge {
                  *   [New Custom Field]
                  */  
                                                                                                                                                                                                                                                                         
-                jQuery('select').live('change',function(){
+                jQuery('.mks_gf select').live('change',function(){
                     if ( jQuery( this ).val() == '[New Custom Field]' ){
                         field = "<em>Enter Field Name<input type='text' name=/></em>";
                         jQuery(this).after( field );
@@ -223,7 +223,7 @@ class GFMakesBridge {
                  *   makesbridge and send to the database
                  */
                                                                                                                                                                                                                                                                         
-                jQuery('input[type="submit"]').live('click',function(){
+                jQuery('.mks_gf input[type="submit"]').live('click',function(){
                     formId = jQuery('#mks_gform').val();
                     mksList = jQuery('#mksList').val();
                     formName = jQuery('#mks_gform option:selected').text();

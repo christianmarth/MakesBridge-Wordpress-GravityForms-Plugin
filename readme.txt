@@ -16,7 +16,16 @@ MakesBridge BridgeMail System Plugin is a marketing automation plugin to wordpre
 1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
+
 == Changelog ==
+
+= 1.03.3 =
+
+* Fixed a bug with admin settings
+
+= 1.03.2 = 
+
+* Fixed a bug with jQuery
 
 = 1.0 =
 * A change since the previous version.

@@ -3,7 +3,7 @@
   Plugin Name: MakesBridge
   Description: MakesBridge plugin for WordPress
   Author: cloudgroup
-  Version: 1.03.1
+  Version: 1.03.3
   Licence: GPL2
  */
 
@@ -154,7 +154,7 @@ function MKS_plugin_section_text() {
     echo '<p>Please enter your MakesBridge login credentials here.</p>';
 }
 
-add_action("user_register", "makesbridge");
+//add_action("user_register", "makesbridge");
 
 function verify_api() {
     $options = get_option('makesbridge_options');
@@ -164,7 +164,7 @@ function verify_api() {
     $api->testSettings();
 }
 
-add_action('init', 'MKS_subscribe');
+//add_action('init', 'MKS_subscribe');
 
 function MKS_subscribe() {
     if (isset($_POST['name'])) {
