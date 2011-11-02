@@ -22,6 +22,7 @@ if (class_exists("RGForms")) {
 
 $options = get_option('makesbridge_options');
 require_once 'mksapi.php';
+require_once 'helpers.php';
 
 function makesbridge($user_id) {
 
@@ -44,7 +45,7 @@ function MakesBridge_Menu() {
 
     add_menu_page("BridgeMail System", "MakesBridge", "manage_options", "makesbridge", "MKS_plugin_options_page");
     add_submenu_page('makesbridge', 'Manage MakesBridge Settings', 'Settings', 'manage_options', 'makesbridge', 'MKS_plugin_options_page');
-//    add_submenu_page('makesbridge', 'Manage Options', 'Manage Campaigns', 'manage_options', 'mks_campaigns', array('makesbridgeCampaigns', 'mks_campaigns'));
+    add_submenu_page('makesbridge', 'Manage Options', 'Manage Campaigns', 'manage_options', 'mks_campaigns', array('makesbridgeCampaigns', 'mks_campaigns'));
 //    add_submenu_page('makesbridge', 'Mange Campaigns', 'Manage MakesBridge Campaigns', 'manage_options', 'MKS_plugin_options_page');
     add_submenu_page('makesbridge', 'Gravity Settings', 'GravityForms Settings', 'manage_options', 'mks_gf', array('GFMakesBridge', 'mks_gf_options'));
 
@@ -242,7 +243,19 @@ class makesbridgeCampaigns {
         $api->login();
         $campaign = $api->getCampaignInfo('1');
         ?>
-        <table class="widefat">
+        <script type="text/javascript">
+            jQuery(document).ready(function(){
+                jQuery('#mks_new_campaign').click(function(){
+                    jQuery('#mks_campaign_listing').slideUp('slow',function(){
+                        jQuery('#mks_campaign_entry').slideDown('slow')
+                    })
+                })
+            })
+        </script>
+
+        <button  class="button" id="mks_new_campaign">Add New Campaign</button>
+        <div id="mks_campaign_listing">
+        <table class="widefat" >
             <thead>
                 <tr>
                     <th>Campaign Name</th>
@@ -271,6 +284,16 @@ class makesbridgeCampaigns {
         ?>
             </tbody>
         </table>
+            </div>
+        <div id="mks_campaign_entry" style="display: none">
+            <label>Name: </label><input type="text" /><br/>
+            <label>Subject: </label><input type="text" /><br/>
+            <label>Body: </label><input type="text" /><br/>
+            <label>Sender Name: </label><input type="text" /><br/>
+            <label>Reply To: </label><input type="text" /><br/>
+            <label>Footer Text: </label><input type="text" /><br/>
+            <label>Footer Text: </label><input type="text" /><br/>
+        </div>
         <?
     }
 
