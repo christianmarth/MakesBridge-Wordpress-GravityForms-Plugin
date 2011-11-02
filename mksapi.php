@@ -81,7 +81,7 @@ class mksapi {
         //CustomFields
         $customField = $subscriber->addChild('customFields');
 
-        if (is_array($data['custom'])) {
+        if (isset ($data['custom'])) {
             foreach ($data['custom'] as $customKey => $customValue) {
                 $customFields = $customField->addChild('customField');
                 $customFields->addAttribute('name', $customKey);
@@ -99,6 +99,28 @@ class mksapi {
         $data = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
 
         return $response;
+    }
+    
+    function getSubscriber($subscriberEmail){
+                $xml = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                <subscriber>
+                    <email>" . $subscriberEmail . "</email>
+                </subscriber>";
+
+        $headers = array(
+            'Content-type' => 'text/xml',
+            'userId' => $this->userId,
+            'auth_tk' => $this->authToken
+        );
+        $response = wp_remote_post($this->url . 'getsubscriber/', array(
+            'headers' => $headers,
+            'sslverify' => false,
+            'body' => $xml
+                ));
+
+        $data = wp_remote_retrieve_body($response);
+        $data = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
+        return($data);
     }
 
     //Custom Fields Function
@@ -214,6 +236,28 @@ class mksapi {
             'auth_tk' => $this->authToken
         );
         $response = wp_remote_post($this->url . 'getcampaignstat/', array(
+            'headers' => $headers,
+            'sslverify' => false,
+            'body' => $xml
+                ));
+
+        $data = wp_remote_retrieve_body($response);
+        $data = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
+        return($data);
+    }
+    
+    function getTrackingTicket($subscriberId){
+        $xml = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                <subscriber>
+                    <id>" . $subscriberId . "</id>
+                </subscriber>";
+
+        $headers = array(
+            'Content-type' => 'text/xml',
+            'userId' => $this->userId,
+            'auth_tk' => $this->authToken
+        );
+        $response = wp_remote_post($this->url . 'gettrackingticket/', array(
             'headers' => $headers,
             'sslverify' => false,
             'body' => $xml
