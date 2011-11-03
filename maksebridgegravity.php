@@ -434,7 +434,7 @@ class GFMakesBridge {
 
             </div>
         </div>
-        <div style="clear:both">
+        <div style="clear:both" class="mks_gf">
             <input type="submit" class="button-primary"/>
         </div>
         <?
