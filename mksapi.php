@@ -73,15 +73,17 @@ class mksapi {
         $xml->addAttribute('listName', $list);
         $subscriber = $xml->addChild('subscriber');
 
-        //StandardFields
-        foreach ($data['standard'] as $key => $value) {
-            $subscriber->$key = $data['standard'][$key];
+        if (isset($data['standard'])) {
+            //StandardFields
+            foreach ($data['standard'] as $key => $value) {
+                $subscriber->$key = $data['standard'][$key];
+            };
         };
 
         //CustomFields
         $customField = $subscriber->addChild('customFields');
 
-        if (is_array($data['custom'])) {
+        if (isset($data['custom'])) {
             foreach ($data['custom'] as $customKey => $customValue) {
                 $customFields = $customField->addChild('customField');
                 $customFields->addAttribute('name', $customKey);
@@ -169,7 +171,7 @@ class mksapi {
             'userId' => $this->userId,
             'auth_tk' => $this->authToken
         );
-        
+
         $response = wp_remote_post($this->url . 'getcampaigninfo/', array(
             'headers' => $headers,
             'sslverify' => false,
