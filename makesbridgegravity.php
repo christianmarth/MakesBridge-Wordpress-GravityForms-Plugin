@@ -274,6 +274,8 @@ class GFMakesBridge {
                          data['workflow'] = new Object();
                          data['workflow']['workflowId'] = jQuery('#mksworkflow option:selected').parent().attr('id')
                          data['workflow']['stepOrder']  = jQuery('#mksworkflow option:selected').data('steporder')
+                        } else {
+                            data['workflow'] = ''
                         }
                         
                         console.log(data)
@@ -289,7 +291,7 @@ class GFMakesBridge {
                             formId: formId,
                             listId: mksList,
                             id: settId,
-                            worflow: '',
+                            worflow: data['workflow'],
                             settings: data['fields']
                         },function(res){
                             if(settId == '0'){
