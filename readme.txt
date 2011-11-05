@@ -9,6 +9,11 @@ MakesBridge BridgeMail System Plugin is a marketing automation plugin to wordpre
 
 == Description ==
 
+== Issues ==
+
+Please submit any issues to 
+
+https://github.com/cloudgroup/MakesBridge-Wordpress-GravityForms-Plugin/issues
 
 
 == Installation ==
