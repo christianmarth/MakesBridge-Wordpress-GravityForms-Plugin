@@ -65,12 +65,14 @@ class GFMakesBridge {
         $settings = GFMakesBridgeData::retrieveForm($form['id']);
 
         //Standard Fields
-        foreach ($settings['meta']['standard'] as $key => $val) {
-            $data['standard'][$val] = $entry[$key];
+        if (isset($settings['meta']['standard'])) {
+            foreach ($settings['meta']['standard'] as $key => $val) {
+                $data['standard'][$val] = $entry[$key];
+            };
         };
 
         //Custom Fields
-        if (is_array($settings['meta']['custom'])) {
+        if (isset($settings['meta']['custom'])) {
             foreach ($settings['meta']['custom'] as $key => $val) {
                 $data['custom'][$val] = $entry[$key];
             };
@@ -184,7 +186,7 @@ class GFMakesBridge {
             }
         </style>
         <script type="text/javascript">
-                                                                                                                                                    
+                                                                                                                                                            
             /*  Javascript Function to configure our MakesBridge Forms
              *  
              *  Ajax request when Gravity Form Dropdown value changes
@@ -204,25 +206,25 @@ class GFMakesBridge {
                         .html(jQuery(res).find('response_data').text());
                     })
                 });
-                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                
                 /*   Add the option to define a new custom field on the fly
                  *   if the field makesbridge dropdown value is
                  *   [New Custom Field]
                  */  
-                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                
                 jQuery('.mks_gf select').live('change',function(){
                     if ( jQuery( this ).val() == '[New Custom Field]' ){
                         field = "<em>Enter Field Name<input type='text' name=/></em>";
                         jQuery(this).after( field );
                     }
                 })                                                  
-                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                
                 /*  OnSubmit create a map of all the form settings
                  *   including a mapping of gravity form fields to
                  *   makesbridge and send to the database
                  */
-                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                
                 jQuery('.mks_gf input[type="submit"]').live('click',function(){
                     formId = jQuery('#mks_gform').val();
                     mksList = jQuery('#mksList').val();
@@ -234,7 +236,7 @@ class GFMakesBridge {
                     data['fields']['standard'] = new Object();
                     data['fields']['custom'] = new Object();
                     i = 0;
-                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                    
                     /*
                      * Loop through each select field value
                      */
@@ -252,13 +254,13 @@ class GFMakesBridge {
                             }
                         }
                     });
-                    
-                    
+                            
+                            
 
                     /*
                      * Send Ajax request to server
                      */
-                                                                                                                                                                          
+                                                                                                                                                                                  
                     if(typeof settId === 'undefined'){
                         settId = '0'
                     };
@@ -280,12 +282,12 @@ class GFMakesBridge {
                         jQuery('#GF_Settings a[href="' + settId + '"]').parents('tr').html("<td><a href=" + settId + " title='GF_Settings_Edit'>edit</a> | <a href=" + settId + " title='GF_Settings_Delete'>delete</a></td><td>" + formName + "</td><td>" + mksList + "</td>")                                                        
                     });
                 })
-                                                                                                                                
+                                                                                                                                        
                 jQuery('#GF_Settings a[title="GF_Settings_Edit"]').live('click',function(e){
                     settId = jQuery(this).attr('href');
                     //                    console.log(settId)
                     e.preventDefault();
-                                                                                                            
+                                                                                                                    
                     jQuery.post(ajaxUrl,{
                         action: 'mks_gf_retrieve',
                         id: settId
@@ -294,7 +296,7 @@ class GFMakesBridge {
                         json = eval('(' + json + ')')
                         jQuery('#mks_gform').val(json.form_id)
                         jQuery('#mksList').val(json.list_id)
-                                                                                                                
+                                                                                                                        
                         jQuery.post(ajaxUrl,{
                             action: 'mks_gf_form',
                             id: json.form_id
@@ -313,17 +315,17 @@ class GFMakesBridge {
                         })
                     })
                 })
-                                        
-                                        
+                                                
+                                                
                 /*  
                  *  Workflows
                  */ 
-                             
+                                     
                 jQuery('#mks_wk_cb').change(function(){
-                (jQuery(this).is(':checked')) ? jQuery('#mksworkflow').show() : jQuery('#mksworkflow').hide() ;
+                    (jQuery(this).is(':checked')) ? jQuery('#mksworkflow').show() : jQuery('#mksworkflow').hide() ;
                 })
-                
-                
+                        
+                        
                 jQuery('#GF_Settings a[title="GF_Settings_Delete"]').live('click',function(e){
                     var res = confirm('Are You Sure You Want To Delete')
                     if (res == true){
@@ -413,22 +415,22 @@ class GFMakesBridge {
             }
             echo '</select><br/>';
 
-/*            echo '<label>Manually Add To  Workflow</label>';
-            echo '<input id="mks_wk_cb" type="checkbox" name="workflow"/>';
-            echo '<select id="mksworkflow" style="display: none;">';
-            foreach ($workflows as $workflow) {
-                    echo '<option></option>';
-                if ($workflow->manualAddition == 'true') {
-                    echo '<optgroup label="' . $workflow->name . '">';
-                    foreach ($workflow->Steps->Step as $step) {
-                        echo '<option>';
-                        echo 'step' . '&nbsp;' . $step->stepOrder . '&nbsp;' . $step->label;
-                        echo '</option>';
-                    }
-                    echo '</optgroup>';
-                }
-            }
-            echo '</select>'; */
+            /*            echo '<label>Manually Add To  Workflow</label>';
+              echo '<input id="mks_wk_cb" type="checkbox" name="workflow"/>';
+              echo '<select id="mksworkflow" style="display: none;">';
+              foreach ($workflows as $workflow) {
+              echo '<option></option>';
+              if ($workflow->manualAddition == 'true') {
+              echo '<optgroup label="' . $workflow->name . '">';
+              foreach ($workflow->Steps->Step as $step) {
+              echo '<option>';
+              echo 'step' . '&nbsp;' . $step->stepOrder . '&nbsp;' . $step->label;
+              echo '</option>';
+              }
+              echo '</optgroup>';
+              }
+              }
+              echo '</select>'; */
             ?>
             <div id="mks_gf_fields">
 
