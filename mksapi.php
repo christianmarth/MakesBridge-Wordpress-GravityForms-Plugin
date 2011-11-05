@@ -73,9 +73,11 @@ class mksapi {
         $xml->addAttribute('listName', $list);
         $subscriber = $xml->addChild('subscriber');
 
-        //StandardFields
-        foreach ($data['standard'] as $key => $value) {
-            $subscriber->$key = $data['standard'][$key];
+        if (isset($data['standard'])) {
+            //StandardFields
+            foreach ($data['standard'] as $key => $value) {
+                $subscriber->$key = $data['standard'][$key];
+            };
         };
 
         //CustomFields

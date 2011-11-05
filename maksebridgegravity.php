@@ -65,8 +65,10 @@ class GFMakesBridge {
         $settings = GFMakesBridgeData::retrieveForm($form['id']);
 
         //Standard Fields
-        foreach ($settings['meta']['standard'] as $key => $val) {
-            $data['standard'][$val] = $entry[$key];
+        if (isset($settings['meta']['standard'])) {
+            foreach ($settings['meta']['standard'] as $key => $val) {
+                $data['standard'][$val] = $entry[$key];
+            };
         };
 
         //Custom Fields
@@ -442,7 +444,7 @@ class GFMakesBridge {
 
             </div>
         </div>
-        <div style="clear:both">
+        <div style="clear:both" class="mks_gf">
             <input type="submit" class="button-primary"/>
         </div>
         <?
