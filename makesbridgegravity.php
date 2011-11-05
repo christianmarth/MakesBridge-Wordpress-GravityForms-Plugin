@@ -30,7 +30,7 @@ class GFMakesBridge {
         } else {
             $id = '0';
         };
-        $id = GFMakesBridgeData::updateFormSettings($id, $formId, $listId, $setting);
+        $id = GFMakesBridgeData::updateFormSettings($id, $formId, $listId, $setting, $workflow);
         $res = new WP_Ajax_Response(array(
                     'data' => $id
                 ));
@@ -199,7 +199,7 @@ class GFMakesBridge {
                 }
             </style>
             <script type="text/javascript">
-                                                                                                                                                                                                
+                                                                                                                                                                                                                                    
                 /*  Javascript Function to configure our MakesBridge Forms
                  *  
                  *  Ajax request when Gravity Form Dropdown value changes
@@ -219,25 +219,25 @@ class GFMakesBridge {
                             .html(jQuery(res).find('response_data').text());
                         })
                     });
-                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                        
                     /*   Add the option to define a new custom field on the fly
                      *   if the field makesbridge dropdown value is
                      *   [New Custom Field]
                      */  
-                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                        
                     jQuery('.mks_gf select').live('change',function(){
                         if ( jQuery( this ).val() == '[New Custom Field]' ){
                             field = "<em>Enter Field Name<input type='text' name=/></em>";
                             jQuery(this).after( field );
                         }
                     })                                                  
-                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                        
                     /*  OnSubmit create a map of all the form settings
                      *   including a mapping of gravity form fields to
                      *   makesbridge and send to the database
                      */
-                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                        
                     jQuery('.mks_gf input[type="submit"]').live('click',function(){
                         formId = jQuery('#mks_gform').val();
                         mksList = jQuery('#mksList').val();
@@ -249,7 +249,7 @@ class GFMakesBridge {
                         data['fields']['standard'] = new Object();
                         data['fields']['custom'] = new Object();
                         i = 0;
-                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                            
                         /*
                          * Loop through each select field value
                          */
@@ -267,22 +267,23 @@ class GFMakesBridge {
                                 }
                             }
                         });
-                                                                
-                                
+                                                                                                    
+                                                                    
                         //Get the value of our workflow field if it's selected
                         if(jQuery('#mks_wk_cb:checked') && jQuery('#mksworkflow option:selected').val() !== ""){
-                         data['workflow'] = new Object();
-                         data['workflow']['workflowId'] = jQuery('#mksworkflow option:selected').parent().attr('id')
-                         data['workflow']['stepOrder']  = jQuery('#mksworkflow option:selected').data('steporder')
+                            data['workflow'] = new Object();
+                            data['workflow']['workflowId'] = jQuery('#mksworkflow option:selected').parent().attr('id');
+                            data['workflow']['stepOrder']  = jQuery('#mksworkflow option:selected').data('steporder');
+                            data['workflow']['uniqueId'] = jQuery('#mksworkflow option:selected').attr('id');
                         } else {
                             data['workflow'] = ''
                         }
-                        
+                                                            
                         console.log(data)
                         /*
                          * Send Ajax request to server
                          */
-                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                          
                         if(typeof settId === 'undefined'){
                             settId = '0'
                         };
@@ -291,7 +292,7 @@ class GFMakesBridge {
                             formId: formId,
                             listId: mksList,
                             id: settId,
-                            worflow: data['workflow'],
+                            workflow: data['workflow'],
                             settings: data['fields']
                         },function(res){
                             if(settId == '0'){
@@ -305,12 +306,12 @@ class GFMakesBridge {
                             jQuery('#GF_Settings a[href="' + settId + '"]').parents('tr').html("<td><a href=" + settId + " title='GF_Settings_Edit'>edit</a> | <a href=" + settId + " title='GF_Settings_Delete'>delete</a></td><td>" + formName + "</td><td>" + mksList + "</td>")                                                        
                         });
                     })
-                                                                                                                                                                            
+                                                                                                                                                                                                                
                     jQuery('#GF_Settings a[title="GF_Settings_Edit"]').live('click',function(e){
                         settId = jQuery(this).attr('href');
                         //                    console.log(settId)
                         e.preventDefault();
-                                                                                                                                                        
+                                                                                                                                                                                            
                         jQuery.post(ajaxUrl,{
                             action: 'mks_gf_retrieve',
                             id: settId
@@ -319,7 +320,33 @@ class GFMakesBridge {
                             json = eval('(' + json + ')')
                             jQuery('#mks_gform').val(json.form_id)
                             jQuery('#mksList').val(json.list_id)
-                                                                                                                                                            
+                                                                
+                            // check to see if workflow exists and check the
+                            // the checkbox if it is
+                            if(json.workflow === '' || json.workflow == undefined){ //No Workflows
+                                // Uncheck the workflow box
+                                jQuery('#mks_wk_cb').attr('checked',false)
+                                // Hide the workflow option
+                                jQuery('#mksworkflow').hide()
+                            } else { //Workflows exists
+                                // Check the workflow box
+                                jQuery('#mks_wk_cb').attr('checked',true)
+                                // Show the workflow options
+                                jQuery('#mksworkflow').show()
+                                //Now we have a workflow select the relevant option  
+                                jQuery('#mksworkflow option').each(function(e){
+                                    //Since Babar is generating random hashes from the id in the
+                                    //API we can't rely on our workflowIds stored locally so we 
+                                    //have to hack around and store a plain text representation 
+                                    //of the id from the workflow name and step id
+                                    //and assign this to an id attribute and match on that
+                                    if( jQuery(this).attr('id') == json.workflow.uniqueId){
+                                        // We have a match, now select that!
+                                        jQuery(this).attr('selected','selected');
+                                    }
+                                })
+                            }
+                                        
                             jQuery.post(ajaxUrl,{
                                 action: 'mks_gf_form',
                                 id: json.form_id
@@ -338,17 +365,17 @@ class GFMakesBridge {
                             })
                         })
                     })
-                                                                                    
-                                                                                    
+                                                                                                                        
+                                                                                                                        
                     /*  
                      *  Workflows
                      */ 
-                                                                         
+                                                                                                             
                     jQuery('#mks_wk_cb').change(function(){
                         (jQuery(this).is(':checked')) ? jQuery('#mksworkflow').show() : jQuery('#mksworkflow').hide() ;
                     })
-                                                            
-                                                            
+                                                                                                
+                                                                                                
                     jQuery('#GF_Settings a[title="GF_Settings_Delete"]').live('click',function(e){
                         var res = confirm('Are You Sure You Want To Delete')
                         if (res == true){
@@ -444,7 +471,7 @@ class GFMakesBridge {
                     if ($workflow->manualAddition == 'true') {
                         echo '<optgroup id="' . $workflow->id . '" label="' . $workflow->name . '">';
                         foreach ($workflow->Steps->Step as $step) {
-                            echo '<option data-steporder="' . $step->stepOrder . '">';
+                            echo '<option data-steporder="' . $step->stepOrder . '" id="' . $workflow->name . $step->stepOrder . '">';
                             echo 'step' . '&nbsp;' . $step->stepOrder . '&nbsp;' . $step->label;
                             echo '</option>';
                         }
@@ -509,6 +536,7 @@ class GFMakesBridgeData {
               form_id mediumint(8) unsigned not null,
               is_active tinyint(1) not null default 1,
               list_id longtext,
+              workflow longtext,
               meta longtext,
               PRIMARY KEY  (id),
               KEY form_id (form_id)
@@ -525,17 +553,18 @@ class GFMakesBridgeData {
     }
 
     //Function to update database with form settings
-    public static function updateFormSettings($id, $formId, $list_id, $setting) {
+    public static function updateFormSettings($id, $formId, $list_id, $setting, $workflow) {
         global $wpdb;
         $tableName = self::getMakesBridgeTableName();
         $settings = maybe_serialize($setting);
+        $workflow = maybe_serialize($workflow);
         if ($id == 0) {
             //Insert Values
-            $wpdb->insert($tableName, array("form_id" => $formId, 'is_active' => '1', "meta" => $settings, "list_id" => $list_id), array("%d", "%d", "%s", "%s"));
+            $wpdb->insert($tableName, array("form_id" => $formId, 'is_active' => '1', "meta" => $settings, "list_id" => $list_id, "workflow" => $workflow), array("%d", "%d", "%s", "%s", "%s"));
             $id = $wpdb->get_var("SELECT LAST_INSERT_ID()");
         } else {
             //Update Values
-            $res = $wpdb->update($tableName, array("form_id" => $formId, "is_active" => '1', "meta" => $settings, "list_id" => $list_id), array("id" => $id), array("%d", "%d", "%s", "%s"), array("%d"));
+            $res = $wpdb->update($tableName, array("form_id" => $formId, "is_active" => '1', "meta" => $settings, "list_id" => $list_id, "workflow" => $workflow), array("id" => $id), array("%d", "%d", "%s", "%s", "%s"), array("%d"));
         }
         return $id;
     }
@@ -544,20 +573,22 @@ class GFMakesBridgeData {
     public static function retrieveForm($id) {
         global $wpdb;
         $tableName = self::getMakesBridgeTableName();
-        $sql = $wpdb->prepare("SELECT id, form_id, is_active, meta, list_id FROM $tableName WHERE form_id=%d", $id);
+        $sql = $wpdb->prepare("SELECT id, form_id, is_active, meta, list_id, workflow FROM $tableName WHERE form_id=%d", $id);
         $results = $wpdb->get_results($sql, ARRAY_A);
         $result = $results[0];
         $result["meta"] = maybe_unserialize($result["meta"]);
+        $result["workflow"] = maybe_unserialize($result["workflow"]);
         return $result;
     }
 
     public static function retrieveFormSettings($id) {
         global $wpdb;
         $tableName = self::getMakesBridgeTableName();
-        $sql = $wpdb->prepare("SELECT id, form_id, is_active, meta, list_id FROM $tableName WHERE id=%d", $id);
+        $sql = $wpdb->prepare("SELECT id, form_id, is_active, meta, list_id, workflow FROM $tableName WHERE id=%d", $id);
         $results = $wpdb->get_results($sql, ARRAY_A);
         $result = $results[0];
         $result["meta"] = maybe_unserialize($result["meta"]);
+        $result["workflow"] = maybe_unserialize($result["workflow"]);
         return $result;
     }
 
