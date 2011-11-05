@@ -287,9 +287,10 @@ class GFMakesBridge {
                         },function(res){
                             if(settId == '0'){
                                 settId = jQuery(res).find('response_data').text();
-                                jQuery('#GF_Settings').append("<tr><td><a href=" + settId + " title='GF_Settings_Edit'>edit</a> | <a href=" + settId + " title='GF_Settings_Delete'>delete</a></td><td>" + formName + "</td><td>" + mksList + "</td></tr>")                            
-                            } else {                            
-                                jQuery('.mks_gf').after("<div class='updated fade below-h2'>" + settId +"</div>");
+                                jQuery('#GF_Settings').before("<div class='updated'><p>Settings Added</p></div>").prev().delay('2000').hide('slow');
+                                jQuery('#GF_Settings').append("<tr><td><a href=" + settId + " title='GF_Settings_Edit'>edit</a> | <a href=" + settId + " title='GF_Settings_Delete'>delete</a></td><td>" + formName + "</td><td>" + mksList + "</td></tr>")
+                            } else {
+                                jQuery('#GF_Settings').before("<div class='updated'><p>Settings Updated</p></div>").prev().delay('2000').hide('slow');
                             }
                             settId = jQuery(res).find('response_data').text();
                             jQuery('#GF_Settings a[href="' + settId + '"]').parents('tr').html("<td><a href=" + settId + " title='GF_Settings_Edit'>edit</a> | <a href=" + settId + " title='GF_Settings_Delete'>delete</a></td><td>" + formName + "</td><td>" + mksList + "</td>")                                                        
@@ -347,6 +348,7 @@ class GFMakesBridge {
                                 action: 'mks_gf_delete',
                                 id: id
                             },function(e){
+                                jQuery('#GF_Settings').before("<div class='updated'><p>Settings Deleted</p></div>").prev().delay('2000').hide('slow');
                                 jQuery('#GF_Settings a[href="' + id +'"]').parents('tr').hide();
                             })
                             return false
