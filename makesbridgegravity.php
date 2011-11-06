@@ -87,12 +87,12 @@ class GFMakesBridge {
         $api->login();
         //Create Subscriber        
         $sub = $api->createSubscriber($data, $settings['list_id']);
+        $res = simplexml_load_string($sub['body']);
+        $subscriberId = $res->Subscriber->id;
         
-//        if(isset($settings['workflow'])){
-//            $api->addToWorkflow($settings['workflow']['workflowId'], $subscriberId, $settings['workflow']['stepId']);
-//        }
-//        
-        print_r($sub);
+        if(isset($settings['workflow'])){
+            $workflow = $api->addToWorkflow($settings['workflow']['workflowId'], $subscriberId, $settings['workflow']['stepOrder']);
+        }
         ?>
         <script type="text/javascript">
 
