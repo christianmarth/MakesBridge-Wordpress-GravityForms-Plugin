@@ -3,7 +3,7 @@
   Plugin Name: MakesBridge
   Description: MakesBridge plugin for WordPress
   Author: cloudgroup
-  Version: 1.03.6
+  Version: 1.03.7
   Licence: GPL2
  */
 
@@ -13,7 +13,7 @@
  */
 
 if (class_exists("RGForms")) {
-    require_once 'maksebridgegravity.php';
+    require_once 'makesbridgegravity.php';
     add_action('init', array('GFMakesBridge', 'init'));
 }
 
@@ -22,7 +22,6 @@ if (class_exists("RGForms")) {
 
 $options = get_option('makesbridge_options');
 require_once 'mksapi.php';
-
 function makesbridge($user_id) {
 
 
@@ -46,8 +45,9 @@ function MakesBridge_Menu() {
     add_submenu_page('makesbridge', 'Manage MakesBridge Settings', 'Settings', 'manage_options', 'makesbridge', 'MKS_plugin_options_page');
 //    add_submenu_page('makesbridge', 'Manage Options', 'Manage Campaigns', 'manage_options', 'mks_campaigns', array('makesbridgeCampaigns', 'mks_campaigns'));
 //    add_submenu_page('makesbridge', 'Mange Campaigns', 'Manage MakesBridge Campaigns', 'manage_options', 'MKS_plugin_options_page');
+if (class_exists("RGForms")) {
     add_submenu_page('makesbridge', 'Gravity Settings', 'GravityForms Settings', 'manage_options', 'mks_gf', array('GFMakesBridge', 'mks_gf_options'));
-
+}
 //	add_submenu_page( 'gprojects', 'Manage Categories', 'Manage Categories', 'manage_options', 'gprojects_cats', 'gprojects_cats_page');
 //	add_submenu_page( 'gprojects', 'G-Projects Options', 'Options', 'manage_options', 'gprojects_options', 'gprojectsOptions');
 //	add_submenu_page( 'gprojects', 'Uninstall G-Projects', 'Uninstall', 'manage_options', 'gprojects_uninstall', 'uninstall_gprojects');
