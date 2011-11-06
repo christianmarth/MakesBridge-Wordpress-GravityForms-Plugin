@@ -25,7 +25,7 @@ https://github.com/cloudgroup/MakesBridge-Wordpress-GravityForms-Plugin/issues
 = 1.03.7 =
 
 * Minor Cosmetic UI changes to gravity settings
-* Add to workflow feature added
+* Add to Workflow feature added
 
 
 = 1.03.6 =
