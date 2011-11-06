@@ -18,6 +18,11 @@ MakesBridge BridgeMail System Plugin is a marketing automation plugin to wordpre
 
 
 == Changelog ==
+
+= 1.03.6 =
+
+* Fixed PHP Errors Bug
+
 = 1.03.5 =
 
 * Fixed bug with submission
