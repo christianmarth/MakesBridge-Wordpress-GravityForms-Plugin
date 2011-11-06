@@ -450,9 +450,14 @@ class GFMakesBridge {
                 <input type="submit" class="button-primary"/>
             </div>
             <?
-        } else {
-            echo 'please enter your makesbridge credentials';
-        }
+        } else {?>
+            <div class="updated">
+                <em>Don't have a MakesBridge Account?</em> <a href="http://makesbridge.com/request-15-day-trial?pmc=CLDGRP" target="_BLANK">Sign up for a free trial here</a>                
+            </div>
+            <div class="error">
+                <p>Please check your MakesBridge credentials</p>
+            </div>
+<?        }
     }
 
     //  Configure the Database
