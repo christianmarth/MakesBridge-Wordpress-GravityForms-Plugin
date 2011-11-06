@@ -96,7 +96,7 @@ class GFMakesBridge {
         ?>
         <script type="text/javascript">
 
-            alert('success')
+//            alert('success')
         </script>
 
         <?
@@ -224,7 +224,7 @@ class GFMakesBridge {
                             action: 'mks_gf_form',
                             id: id
                         },function(res){
-                            console.log(res)
+//                            console.log(res)
                             jQuery('#mks_gf_fields')
                             .html(jQuery(res).find('response_data').text());
                         })
@@ -289,7 +289,7 @@ class GFMakesBridge {
                             data['workflow'] = ''
                         }
                                                             
-                        console.log(data)
+//                        console.log(data)
                         /*
                          * Send Ajax request to server
                          */
