@@ -77,11 +77,21 @@ class GFMakesBridge {
                 $data['custom'][$val] = $entry[$key];
             };
         }
-
+        
+        //Wordpress Options
         $options = get_option('makesbridge_options');
+        
+        //MakesBridge API
         $api = new mksapi($options['MKS_UserId'], $options['MKS_API_Token']);
+        //Get our Auth_Tk
         $api->login();
+        //Create Subscriber        
         $sub = $api->createSubscriber($data, $settings['list_id']);
+        
+//        if(isset($settings['workflow'])){
+//            $api->addToWorkflow($settings['workflow']['workflowId'], $subscriberId, $settings['workflow']['stepId']);
+//        }
+//        
         print_r($sub);
         ?>
         <script type="text/javascript">
