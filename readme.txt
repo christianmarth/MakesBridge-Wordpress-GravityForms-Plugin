@@ -1,11 +1,13 @@
 === MakesBridge BridgeMail System Wordpress Plugin ===
 Contributors: cloudgroup
-Tags: email, marketing, marketing automation, edm
+Tags: email, marketing, marketing automation, edm, email, 
 Requires at least: 3.2
 Tested up to: 3.2
-Stable tag: 1.01.x
+Stable tag: 1.03.x
 
 MakesBridge BridgeMail System Plugin is a marketing automation plugin to wordpress which integrates makesbridge to wordpress
+
+If you don't have a MakesBridge account please go to http://makesbridge.com/request-15-day-trial?pmc=CLDGRP to sign up for a free trial.
 
 == Issues ==
 
