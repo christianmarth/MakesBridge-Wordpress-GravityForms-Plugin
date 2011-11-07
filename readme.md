@@ -3,6 +3,9 @@
 
 MakesBridge BridgeMail System Plugin is a marketing automation plugin to wordpress which integrates makesbridge to wordpress
 
+If you don't have a MakesBridge account please go to http://makesbridge.com/request-15-day-trial?pmc=CLDGRP to sign up for a free trial.
+
+
 #Installation
 
 1. Upload to the `/wp-content/plugins/` directory
