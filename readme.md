@@ -11,6 +11,15 @@ MakesBridge BridgeMail System Plugin is a marketing automation plugin to wordpre
 
 #Changelog
 
+= 1.03.8 =
+
+* Added support for makesbridge tracking cookie
+
+= 1.03.7 =
+
+* Minor Cosmetic UI changes to gravity settings
+* Add to Workflow feature added
+
 = 1.03.6 =
 
 * Fixed PHP Errors Bug
