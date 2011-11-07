@@ -47,7 +47,7 @@ function MakesBridge_Menu() {
 
     add_menu_page("BridgeMail System", "MakesBridge", "manage_options", "makesbridge", "MKS_plugin_options_page");
     add_submenu_page('makesbridge', 'Manage MakesBridge Settings', 'Settings', 'manage_options', 'makesbridge', 'MKS_plugin_options_page');
-//    add_submenu_page('makesbridge', 'Manage Options', 'Manage Campaigns', 'manage_options', 'mks_campaigns', array('makesbridgeCampaigns', 'mks_campaigns'));
+    add_submenu_page('makesbridge', 'Manage Options', 'Manage Campaigns', 'manage_options', 'mks_campaigns', array('makesbridgeCampaigns', 'mks_campaigns'));
 //    add_submenu_page('makesbridge', 'Mange Campaigns', 'Manage MakesBridge Campaigns', 'manage_options', 'MKS_plugin_options_page');
 if (class_exists("RGForms")) {
     add_submenu_page('makesbridge', 'Gravity Settings', 'GravityForms Settings', 'manage_options', 'mks_gf', array('GFMakesBridge', 'mks_gf_options'));
