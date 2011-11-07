@@ -21,6 +21,9 @@ https://github.com/cloudgroup/MakesBridge-Wordpress-GravityForms-Plugin/issues
 
 
 == Changelog ==
+= 1.03.5 =
+
+* Fixed bug with submission
 
 = 1.03.7 =
 
