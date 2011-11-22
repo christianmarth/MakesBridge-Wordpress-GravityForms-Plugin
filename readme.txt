@@ -27,6 +27,10 @@ https://github.com/cloudgroup/MakesBridge-Wordpress-GravityForms-Plugin/issues
 
 * Fixed bug with submission
 
+= 1.03.8 =
+
+* Added support for makesbridge tracking cookie
+
 = 1.03.7 =
 
 * Minor Cosmetic UI changes to gravity settings
